@@ -1,0 +1,53 @@
+---
+title: "Untitled"
+author: "Katie Masiello"
+date: '2022-04-13'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(pins)
+```
+
+
+```{r}
+board_unversioned <- board_rsconnect(versioned = FALSE)
+board_versioned <- board_rsconnect(versioned = TRUE)
+
+timestamp <- tibble::tibble(date = Sys.Date(), time = format(Sys.time(), "%X"))
+
+
+board_unversioned %>% pin_write(x=timestamp, 
+                                name = "timestamp_unversioned",  
+                                title = "Unversioned timestamp (board level)",
+                                description = "pinned with `board_rsconnect(versioned=FALSE)` and `pin_write(versioned=NULL)`")
+
+board_versioned %>% pin_write(timestamp, 
+                              name = "timestamp_versioned", 
+                              title = "Versioned timestamp method 1 (board level)",
+                              description = "Method 1 for versioning - board versioning on with board_rsconnect(versioned=TRUE) and pin_write(versioned=NULL) - this is the default behavior.")
+
+board_unversioned %>% pin_write(x=timestamp, 
+                                name = "timestamp_unversioned2",  
+                                title = "Unversioned timestamp method 2 (pin write level)", 
+                                versioned = TRUE,
+                                description = "Method 2 for versioning - pinned with `board_rsconnect(versioned=FALSE)` and `pin_write(versioned=TRUE)`")
+
+
+# this will fail for re-pinning
+board_versioned %>% pin_write(timestamp, 
+                              name = "timestamp_unversioned2", 
+                              title = "Unversioned timestamp method 2 (pin write level)",
+                              versioned = FALSE, 
+                              description = "pinned with versioned board (default) but pin_write versioned = FALSE")
+
+```
+### The last pin will fail with:
+# Error in `abort_pin_versioned()`:
+# ! Pin is versioned, but you have requested a write without versions
+# ℹ To un-version a pin, you must delete it
+# Run `rlang::last_error()` to see where the error occurred.
+
+
