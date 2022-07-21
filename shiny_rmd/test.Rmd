@@ -1,0 +1,20 @@
+---
+title: "User identification with RMD"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Who are you? 
+```{r}
+  if(Sys.getenv("R_CONFIG_ACTIVE") == "rsconnect") {
+    user_name <- session$user
+  } else {
+    user_name <- "I dunno"
+  }
+user_name
+```
+
