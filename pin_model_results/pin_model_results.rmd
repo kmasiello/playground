@@ -35,7 +35,9 @@ new_data <- Sacramento %>%
 
 
 
-(predict_sac <- predict(rf_fit, new_data))
+(predict_sac <- predict(rf_fit, new_data) |> 
+    bind_cols(new_data) |> 
+    relocate(.pred, .after = last_col()))
 
 ```
 
