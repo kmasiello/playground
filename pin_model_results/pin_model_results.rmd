@@ -1,0 +1,49 @@
+---
+title: "Untitled"
+output: html_document
+date: '2022-09-01'
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Create model
+```{r}
+library(parsnip)
+library(workflows)
+library(tidyverse)
+library(pins)
+
+data(Sacramento, package = "modeldata")
+
+rf_spec <- rand_forest(mode = "regression")
+rf_form <- price ~ type + sqft + beds + baths
+
+rf_fit <-
+  workflow(rf_form, rf_spec) %>%
+  fit(Sacramento)
+```
+
+## Make predictions
+```{r}
+new_data <- Sacramento %>%
+  slice_sample(n = 10) %>%
+  select(type, sqft, beds, baths)
+
+
+
+(predict_sac <- predict(rf_fit, new_data))
+
+```
+
+
+## Pin predictions
+```{r}
+board <- board_rsconnect()
+board %>% pin_write(predict_sac)
+
+```
+
