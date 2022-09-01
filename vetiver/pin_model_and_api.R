@@ -2,6 +2,7 @@ library(parsnip)
 library(workflows)
 library(vetiver)
 library(pins)
+library(modeldata)
 
 data(Sacramento, package = "modeldata")
 
