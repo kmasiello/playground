@@ -16,6 +16,7 @@ library(parsnip)
 library(workflows)
 library(tidyverse)
 library(pins)
+library(modeldata)
 
 data(Sacramento, package = "modeldata")
 
